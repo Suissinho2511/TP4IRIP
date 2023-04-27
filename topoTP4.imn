@@ -16,6 +16,39 @@ node n1 {
     labelcoords {377.0 78.0}
     interface-peer {eth0 n2}
     interface-peer {eth1 n3}
+    services {BGP zebra IPForward}
+    custom-config {
+	custom-config-id service:zebra
+	custom-command zebra
+	config {
+	files=('/usr/local/etc/quagga/Quagga.conf', 'quaggaboot.sh', '/usr/local/etc/quagga/vtysh.conf', )
+	}
+    }
+    custom-config {
+	custom-config-id service:zebra:/usr/local/etc/quagga/Quagga.conf
+	custom-command /usr/local/etc/quagga/Quagga.conf
+	config {
+	interface eth0
+	  ip address 10.0.1.2/24
+	  
+	!
+	interface eth1
+	  ip address 10.0.2.1/24
+	  
+	!
+	!
+	! BGP configuration
+	!
+	! You should configure the AS number below,
+	! along with this router's peers.
+	!
+	router bgp 65500
+	 neighbor 10.0.1.1 remote-as 65300
+	 neighbor 10.0.2.2 remote-as 65400
+	!
+	
+	}
+    }
 }
 
 node n2 {
@@ -35,11 +68,53 @@ node n2 {
 	!
     }
     canvas c1
-    iconcoords {163.0 173.0}
-    labelcoords {163.0 205.0}
+    iconcoords {163.0 172.0}
+    labelcoords {163.0 204.0}
     interface-peer {eth0 n10}
     interface-peer {eth1 n1}
     interface-peer {eth2 n4}
+    services {BGP zebra IPForward}
+    custom-config {
+	custom-config-id service:zebra
+	custom-command zebra
+	config {
+	files=('/usr/local/etc/quagga/Quagga.conf', 'quaggaboot.sh', '/usr/local/etc/quagga/vtysh.conf', )
+	}
+    }
+    custom-config {
+	custom-config-id service:zebra:/usr/local/etc/quagga/Quagga.conf
+	custom-command /usr/local/etc/quagga/Quagga.conf
+	config {
+	interface eth0
+	  ip address 10.0.0.2/24
+	  
+	!
+	interface eth1
+	  ip address 10.0.1.1/24
+	  
+	!
+	interface eth2
+	  ip address 10.0.4.1/24
+	  
+	!
+	!
+	! BGP configuration
+	!
+	! You should configure the AS number below,
+	! along with this router's peers.
+	!
+	router bgp 65300
+	  neighbor 10.0.4.2 remote-as 65000
+	  neighbor 10.0.1.2 remote-as 65500
+	  neighbor 10.0.0.1 remote-as 65100
+	  
+	  
+		
+	!
+	!
+	
+	}
+    }
 }
 
 node n3 {
@@ -59,11 +134,49 @@ node n3 {
 	!
     }
     canvas c1
-    iconcoords {844.0 211.0}
-    labelcoords {844.0 243.0}
+    iconcoords {843.0 211.0}
+    labelcoords {843.0 243.0}
     interface-peer {eth0 n1}
     interface-peer {eth1 n7}
     interface-peer {eth2 n4}
+    services {BGP zebra IPForward}
+    custom-config {
+	custom-config-id service:zebra
+	custom-command zebra
+	config {
+	files=('/usr/local/etc/quagga/Quagga.conf', 'quaggaboot.sh', '/usr/local/etc/quagga/vtysh.conf', )
+	}
+    }
+    custom-config {
+	custom-config-id service:zebra:/usr/local/etc/quagga/Quagga.conf
+	custom-command /usr/local/etc/quagga/Quagga.conf
+	config {
+	interface eth0
+	  ip address 10.0.2.2/24
+	  
+	!
+	interface eth1
+	  ip address 10.0.3.1/24
+	  
+	!
+	interface eth2
+	  ip address 10.0.5.2/24
+	  
+	!
+	!
+	! BGP configuration
+	!
+	! You should configure the AS number below,
+	! along with this router's peers.
+	!
+	router bgp 65400
+	 neighbor 10.0.3.2 remote-as 65200
+	 neighbor 10.0.2.1 remote-as 65500
+	 neighbor 10.0.5.1 remote-as 65000
+	!
+	
+	}
+    }
 }
 
 node n4 {
@@ -86,13 +199,76 @@ node n4 {
 	!
     }
     canvas c1
-    iconcoords {493.0 293.0}
-    labelcoords {493.0 325.0}
+    iconcoords {493.0 291.0}
+    labelcoords {493.0 323.0}
     interface-peer {eth0 n2}
     interface-peer {eth1 n3}
     interface-peer {eth2 n5}
     interface-peer {eth3 n6}
-    services {OSPFv2 zebra IPForward}
+    services {BGP OSPFv2 zebra IPForward}
+    custom-config {
+	custom-config-id service:zebra
+	custom-command zebra
+	config {
+	files=('/usr/local/etc/quagga/Quagga.conf', 'quaggaboot.sh', '/usr/local/etc/quagga/vtysh.conf', )
+	}
+    }
+    custom-config {
+	custom-config-id service:zebra:/usr/local/etc/quagga/Quagga.conf
+	custom-command /usr/local/etc/quagga/Quagga.conf
+	config {
+	interface eth0
+	  ip address 10.0.4.2/24
+	  ip ospf network point-to-point
+	  ip ospf hello-interval 2
+	  ip ospf dead-interval 6
+	  ip ospf retransmit-interval 5
+	  
+	!
+	interface eth1
+	  ip address 10.0.5.1/24
+	  ip ospf network point-to-point
+	  ip ospf hello-interval 2
+	  ip ospf dead-interval 6
+	  ip ospf retransmit-interval 5
+	  
+	!
+	interface eth2
+	  ip address 10.0.0.1/16
+	  ip ospf network point-to-point
+	  ip ospf hello-interval 2
+	  ip ospf dead-interval 6
+	  ip ospf retransmit-interval 5
+	  
+	!
+	interface eth3
+	  ip address 10.0.0.2/16
+	  ip ospf network point-to-point
+	  ip ospf hello-interval 2
+	  ip ospf dead-interval 6
+	  ip ospf retransmit-interval 5
+	  
+	!
+	!
+	! BGP configuration
+	!
+	! You should configure the AS number below,
+	! along with this router's peers.
+	!
+	router bgp 65000
+	  neighbor 10.0.4.1 remote-as 65300
+	  neighbor 10.0.5.2 remote-as 65400
+	
+	!
+	!
+	router ospf
+	  router-id 10.0.4.2
+	  network 10.0.0.1/16 area 0
+	  network 10.0.0.2/16 area 0
+	!
+	
+	}
+    }
 }
 
 node n5 {
@@ -115,8 +291,8 @@ node n5 {
 	!
     }
     canvas c1
-    iconcoords {379.0 390.0}
-    labelcoords {379.0 422.0}
+    iconcoords {382.0 388.0}
+    labelcoords {382.0 420.0}
     interface-peer {eth0 n4}
     interface-peer {eth1 n13}
     interface-peer {eth2 n14}
@@ -193,8 +369,8 @@ node n6 {
 	!
     }
     canvas c1
-    iconcoords {582.0 394.0}
-    labelcoords {582.0 426.0}
+    iconcoords {592.0 384.0}
+    labelcoords {592.0 416.0}
     interface-peer {eth0 n4}
     interface-peer {eth1 n15}
     interface-peer {eth2 n16}
@@ -273,7 +449,48 @@ node n7 {
     interface-peer {eth0 n3}
     interface-peer {eth1 n8}
     interface-peer {eth2 n9}
-    services {RIP zebra IPForward}
+    services {BGP RIP zebra IPForward}
+    custom-config {
+	custom-config-id service:zebra
+	custom-command zebra
+	config {
+	files=('/usr/local/etc/quagga/Quagga.conf', 'quaggaboot.sh', '/usr/local/etc/quagga/vtysh.conf', )
+	}
+    }
+    custom-config {
+	custom-config-id service:zebra:/usr/local/etc/quagga/Quagga.conf
+	custom-command /usr/local/etc/quagga/Quagga.conf
+	config {
+	interface eth0
+	  ip address 10.0.3.2/24
+	  
+	!
+	interface eth1
+	  ip address 10.2.0.1/16
+	  
+	!
+	interface eth2
+	  ip address 10.2.0.2/16
+	  
+	!
+	!
+	! BGP configuration
+	!
+	! You should configure the AS number below,
+	! along with this router's peers.
+	!
+	router bgp 65200
+	  neighbor 10.0.3.1 remote-as 65400
+	!
+	router rip
+	  redistribute static
+	  redistribute connected
+	  redistribute ospf
+	  network 0.0.0.0/0
+	!
+	
+	}
+    }
 }
 
 node n8 {
@@ -340,6 +557,60 @@ node n10 {
     interface-peer {eth0 n2}
     interface-peer {eth1 n12}
     interface-peer {eth2 n11}
+    services {BGP OSPFv2 zebra IPForward}
+    custom-config {
+	custom-config-id service:zebra
+	custom-command zebra
+	config {
+	files=('/usr/local/etc/quagga/Quagga.conf', 'quaggaboot.sh', '/usr/local/etc/quagga/vtysh.conf', )
+	}
+    }
+    custom-config {
+	custom-config-id service:zebra:/usr/local/etc/quagga/Quagga.conf
+	custom-command /usr/local/etc/quagga/Quagga.conf
+	config {
+	interface eth0
+	  ip address 10.0.0.1/24
+	  ip ospf network point-to-point
+	  ip ospf hello-interval 2
+	  ip ospf dead-interval 6
+	  ip ospf retransmit-interval 5
+	  
+	!
+	interface eth1
+	  ip address 10.0.8.1/24
+	  ip ospf network point-to-point
+	  ip ospf hello-interval 2
+	  ip ospf dead-interval 6
+	  ip ospf retransmit-interval 5
+	  
+	!
+	interface eth2
+	  ip address 10.0.9.1/24
+	  ip ospf network point-to-point
+	  ip ospf hello-interval 2
+	  ip ospf dead-interval 6
+	  ip ospf retransmit-interval 5
+	  
+	!
+	!
+	! BGP configuration
+	!
+	! You should configure the AS number below,
+	! along with this router's peers.
+	!
+	router bgp 65100
+	  neighbor 10.0.0.2 remote-as 65300
+	!
+	router ospf
+	  router-id 10.0.0.1
+	  network 10.0.0.1/24 area 0
+	  network 10.0.8.1/24 area 0
+	  network 10.0.9.1/24 area 0
+	!
+	
+	}
+    }
 }
 
 node n11 {
@@ -394,8 +665,8 @@ node n13 {
 	!
     }
     canvas c1
-    iconcoords {243.0 490.0}
-    labelcoords {243.0 522.0}
+    iconcoords {255.0 488.0}
+    labelcoords {255.0 520.0}
     interface-peer {eth0 n5}
     services {OSPFv2 zebra IPForward}
     custom-config {
@@ -502,7 +773,7 @@ node n15 {
 	!
 	router ospf
 	  router-id 10.0.2.4
-	  network 10.0.2.4/16 area 1
+	  network 10.0.2.4/16 area 2
 	!
 	
 	}
@@ -520,8 +791,8 @@ node n16 {
 	!
     }
     canvas c1
-    iconcoords {603.0 587.0}
-    labelcoords {603.0 619.0}
+    iconcoords {608.0 531.0}
+    labelcoords {608.0 563.0}
     interface-peer {eth0 n6}
     services {OSPFv2 zebra IPForward}
     custom-config {
@@ -544,7 +815,7 @@ node n16 {
 	!
 	router ospf
 	  router-id 10.0.2.5
-	  network 10.0.2.5/16 area 1
+	  network 10.0.2.5/16 area 2
 	!
 	
 	}
@@ -571,8 +842,8 @@ node n17 {
 	!
     }
     canvas c1
-    iconcoords {133.0 502.0}
-    labelcoords {133.0 534.0}
+    iconcoords {152.0 495.0}
+    labelcoords {152.0 527.0}
     interface-peer {eth0 n11}
     interface-peer {eth1 n12}
     interface-peer {eth2 n18}
@@ -664,8 +935,8 @@ node n21 {
 	!
     }
     canvas c1
-    iconcoords {724.0 569.0}
-    labelcoords {724.0 601.0}
+    iconcoords {725.0 568.0}
+    labelcoords {725.0 600.0}
     interface-peer {eth0 n6}
     services {OSPFv2 zebra IPForward}
     custom-config {
@@ -688,7 +959,7 @@ node n21 {
 	!
 	router ospf
 	  router-id 10.0.2.6
-	  network 10.0.2.6/16 area 1
+	  network 10.0.2.6/16 area 2
 	!
 	
 	}
